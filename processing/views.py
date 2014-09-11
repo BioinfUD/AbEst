@@ -79,3 +79,18 @@ def diffexp_form(request):
 
 def upload_success(request):
     return render(request, 'upload_success.html')
+
+
+def auth_view(request):
+    email = request.POST.get('email', '')
+    password = request.POST.get('password', '')
+    user = authenticate(username=email,password=password)
+    #return HttpResponse(user)
+    if user is not None:
+        login(request, user)
+        return render_to_response('home.html', context_instance=RequestContext(request))
+    #return render('hay un usuario')
+    else:
+        return render_to_response('error_login.html', context_instance=RequestContext(request))
+    #return render('no hay usuario')
+

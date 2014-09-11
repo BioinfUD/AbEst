@@ -13,6 +13,7 @@ urlpatterns = patterns('processing.views',
     url(r'^diffexp/$', 'diffexp_form'),
     url(r'^register/$', 'register_user'),
     url(r'^login/$', 'log_in'),
+    url(r'^login/auth/$', 'auth_view'),
     # Examples:
     # url(r'^$', 'ExpDiff.views.home', name='home'),
     # url(r'^ExpDiff/', include('ExpDiff.foo.urls')),
