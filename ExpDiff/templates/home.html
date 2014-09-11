@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-sm-3">
+        <nav style="border-radius: 5px; border: solid rgb(161, 161, 161) 2px;">
+          <ul class="nav nav-pills nav-stacked span2">
+            <li><a href="/diffexp/">Differential expression</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Mapping <span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="/bowtie/">Bowtie</a></li>
+                <li><a href="/bwa/">BWA</a></li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+    </div>
+    <div class="col-sm-9" style="border-left: solid rgb(80, 121, 150) 1px;">
+        <h1>
+            Este es un titulo
+        </h1>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </p>
+    </div>
+</div>
+
+{% endblock %}

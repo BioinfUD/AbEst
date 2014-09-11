@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-6">
+            <h2>Register</h2><br>
+            <form action="/register/" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_email">Email:</label>
+                    <input class="form-control" id="id_email" maxlength="75" name="email" type="email">
+                </div>
+                <div class="form-group">
+                    <label for="id_firstName">FirstName:</label>
+                    <input class="form-control" id="id_firstName" maxlength="30" name="firstName" type="text">
+                </div>
+                <div class="form-group">
+                    <label for="id_lastName">LastName:</label>
+                    <input class="form-control" id="id_lastName" maxlength="30" name="lastName" type="text">
+                </div>
+                <div class="form-group">
+                    <label for="id_password1">Password:</label>
+                    <input class="form-control" id="id_password1" name="password1" type="password">
+                </div>
+                <div class="form-group">
+                    <label for="id_password2">Repeat password:</label>
+                    <input class="form-control" id="id_password2" name="password2" type="password">
+                </div>
+                <button type="submit" class="btn btn-default">Sign up</button>
+            </form>
+        </div>
+        <div class="col-sm-3"> </div>
+    </div>
+    {% endblock %}
