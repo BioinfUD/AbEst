@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Django settings for ExpDiff project.
+import os
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))#
 
 CORES = 8
 
@@ -118,7 +119,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'processing',
-    'core',
     # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
