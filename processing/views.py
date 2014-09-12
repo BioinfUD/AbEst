@@ -1,18 +1,17 @@
 from forms import *
-from django.shortcuts import render
 from processing.models import *
+from django.shortcuts import render
+from django.http import HttpResponse
+from django.contrib.auth.models import User
+from django.http import HttpResponseRedirect
+from django.shortcuts import render_to_response
+from django.core.context_processors import csrf
+from django.contrib.auth.decorators import login_required
+from django.template import loader, Context, RequestContext
+from django.contrib.auth import authenticate, login, logout
 # Create your views here.
 
-def upload_file(request): 
-    if request.method == 'POST': 
-        form = UploadFileForm(request.POST, request.FILES) 
-        if form.is_valid(): 
-            instance = File(fileUpload=request.FILES['file']) 
-            instance.save() 
-            return HttpResponseRedirect('/success/') 
-    else: 
-        form = UploadFileForm() 
-        return render(request, 'upload.html', {'form': form})
+
 
 ############# AUTENTICATION ###############
 def auth_view(request):
@@ -61,36 +60,56 @@ def register_user(request):
         return render(request, 'register.html')
 
 
+
+############# File Upload ###############
+
+@login_required(login_url='/login/')
+def filesubmit(request): 
+    if request.method == 'POST':
+        #try:
+        name = request.POST.get('name', '')
+        desc = request.POST.get('description', '')
+        user=User.objects.select_related().get(id=request.user.pk)
+        p=user.profile
+        instance = File(fileUpload=request.FILES.get('file',''),description=desc,profile=p)
+        instance.save() 
+        return HttpResponseRedirect('/files/success/') 
+        #except Exception as e:
+        #    print e
+    else: 
+        return render(request, 'upload.html')
+
 ############# PAGE RENDER ###############
 def home(request):
     return render(request, 'home.html')
 
 
+@login_required(login_url='/login/')
 def bowtie_form(request):
     return render(request, 'bowtie_form.html')
 
 
+@login_required(login_url='/login/')
 def bwa_form(request):
     return render(request, 'bwa_form.html')
 
 
+@login_required(login_url='/login/')
 def diffexp_form(request):
     return render(request, 'diffexp_form.html')
 
+
+@login_required(login_url='/login/')
 def upload_success(request):
     return render(request, 'upload_success.html')
 
 
-def auth_view(request):
-    email = request.POST.get('email', '')
-    password = request.POST.get('password', '')
-    user = authenticate(username=email,password=password)
-    #return HttpResponse(user)
-    if user is not None:
-        login(request, user)
-        return render_to_response('home.html', context_instance=RequestContext(request))
-    #return render('hay un usuario')
-    else:
-        return render_to_response('error_login.html', context_instance=RequestContext(request))
-    #return render('no hay usuario')
+@login_required(login_url='/login/')
+def show_files(request):
+    return render(request, 'files.html')
 
+
+@login_required(login_url='/login/')
+def show_fileupload(request):
+    form = UploadFileForm()
+    return render(request, 'fileupload.html',{'form':form})

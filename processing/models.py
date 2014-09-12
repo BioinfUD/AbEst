@@ -74,7 +74,8 @@ class Mapeo(models.Model):
 
 class ExpDiff(models.Model):
     sam_input = [ ]
- 
+
+         
 
 # Create your models here.
 class Profile(models.Model):
@@ -83,6 +84,8 @@ class Profile(models.Model):
     firstName = models.CharField(max_length=30)
     lastName = models.CharField(max_length=30)
     #profile_pic = models.ImageField(upload_to='img/profile/%Y/%m/')
+    def __unicode__(self):
+        return unicode(self.email)
 
 '''formulario para subir foto de perfil
 class ImageUploadForm(forms.Form):
@@ -90,7 +93,8 @@ class ImageUploadForm(forms.Form):
 '''
 
 class File(models.Model): 
-    title = forms.CharField(max_length=50) 
-    fileUpload = models.ImageField(upload_to='img/files/%Y/%m/') 
-    description = models.CharField(max_length=200) 
+    fileUpload = models.FileField(upload_to='files/') 
+    description = models.TextField() 
     profile = models.ForeignKey(Profile) # formulario para subir cualquier archivo 
+    def __unicode__(self):
+        return unicode(self.description)
