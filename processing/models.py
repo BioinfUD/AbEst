@@ -93,7 +93,7 @@ class ImageUploadForm(forms.Form):
 '''
 
 class File(models.Model): 
-    fileUpload = models.FileField(upload_to='files/') 
+    fileUpload = models.FileField() 
     description = models.TextField() 
     profile = models.ForeignKey(Profile) # formulario para subir cualquier archivo 
     def __unicode__(self):

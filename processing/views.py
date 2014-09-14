@@ -67,11 +67,10 @@ def register_user(request):
 def filesubmit(request): 
     if request.method == 'POST':
         #try:
-        name = request.POST.get('name', '')
         desc = request.POST.get('description', '')
         user=User.objects.select_related().get(id=request.user.pk)
         p=user.profile
-        instance = File(fileUpload=request.FILES.get('file',''),description=desc,profile=p)
+        instance = File(fileUpload=request.FILES['file'],description=desc,profile=p)
         instance.save() 
         return HttpResponseRedirect('/files/success/') 
         #except Exception as e:

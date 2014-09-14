@@ -14,7 +14,7 @@
         <h1>
             File upload
         </h1>
-        <form action="/files/submit/" method="post">
+        <form action="/files/submit/" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="id_description"><h4>Description:</h4></label>
