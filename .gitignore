@@ -1,4 +1,4 @@
 files/*
-.pyc
-.py~
+*.pyc
+*.py~
 migrations

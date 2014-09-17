@@ -13,12 +13,29 @@
         <h1>
             Files list
         </h1>
-        <p>
-
-                {% for f in file_list %}
-                    {{f.description}}
-                {% endfor %}
-        </p>
+        <div class="list-group">
+            {% for f in file_list %}
+                <div href="#" class="list-group-item glyphicon glyphicon-file">
+                    <span class="" title="Description: {{f.description}}">
+                        {{f.fileUpload.name}}
+                    </span>
+                    <span class="pull-right">
+                        <span class="label label-success glyphicon glyphicon-edit">
+                            <a style="color:white" href="/files/edit/{{f.id}}">
+                            Edit
+                            </a>
+                        </span>
+                        <span class="label label-danger glyphicon glyphicon-remove">
+                            <a style="color:white" href="/files/edit/{{f.id}}">
+                            Delete 
+                            </a>
+                        </span>
+                        
+                    </span>
+                    
+                </div> 
+            {% endfor %}
+        </div>
     </div>
 </div>
 
