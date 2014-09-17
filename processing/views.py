@@ -69,14 +69,14 @@ def filesubmit(request):
     if request.method == 'POST':
         #try:
         desc = request.POST.get('description', '')
-        user=User.objects.select_related().get(id=request.user.pk)
-        p=user.profile
+        user = User.objects.select_related().get(id=request.user.pk)
+        p = user.profile
         instance = File(fileUpload=request.FILES['file'],description=desc,profile=p)
         instance.save() 
         return HttpResponseRedirect('/files/success/') 
         #except Exception as e:
         #    print e
-    else: 
+    else:
         return render(request, 'upload.html')
 
 ############# PAGE RENDER ###############
@@ -106,7 +106,11 @@ def upload_success(request):
 
 @login_required(login_url='/login/')
 def show_files(request):
-    return render(request, 'files.html')
+    user = User.objects.select_related().get(id=request.user.pk)
+    profile = user.profile
+    file_list = profile.file_set.all()
+    return render(request, 'files.html',{'file_list':file_list})
+
 
 
 @login_required(login_url='/login/')

@@ -14,7 +14,10 @@
             Files list
         </h1>
         <p>
-            proximamene una lista de archivos
+
+                {% for f in file_list %}
+                    {{f.description}}
+                {% endfor %}
         </p>
     </div>
 </div>
