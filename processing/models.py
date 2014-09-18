@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from time import sleep
 from django.core.files import File as Django_File
 from django.conf import settings
+from random import randint
 
 # Opciones estáticas
 POSIBLES_ESTADOS_PROCESOS = (
@@ -117,14 +118,14 @@ class Mapeo(models.Model):
         while t1.isAlive():
             sleep(1)
         file_name = "/tmp/%s.bam" % self.name.replace(" ", "_")
-        if self.tip == 1:
+        if self.tipo == 1:
             mates1 = ','.join(reads_1)
             mates2 = ','.join(reads_2)
-            # out_bam = "%s.bam" % self.name.replace(" ", "_")
-            comando = "bowtie -p %s  %s -1 %s -2 %s  -| samtools view -bSh - > %s " % (settings.CORES, reference_index, mates1, mates2, file_name)
+            # out_bam = "%s.bam" % self.name.replace(" ", "_")samtools view -Sb - > hits.bam
+            comando = "bowtie -S -p %s  %s -1 %s -2 %s | samtools view -Sb -  > %s " % (settings.CORES, reference_index, mates1, mates2, file_name)
         elif self.tipo == 0:
             mates = ",".join(reads_se)
-            comando = "bowtie -p %s  %s -s %s   - > %s | samtools view -bSh - > %s " % (settings.CORES, reference_index, mates, file_name)
+            comando = "bowtie -S -p %s  %s -s %s   | samtools view -bSx - > %s " % (settings.CORES, reference_index, mates, file_name)
         print comando
         p2 = Proceso(comando=str(comando))
         p2.save()
@@ -139,15 +140,12 @@ class Mapeo(models.Model):
         out_file.save()
         self.out_file = out_file
 
-    def run(self):
+    def run(self, reference, reads_1="", reads_2="", reads_se="", type=1):
         self.name = "Experimento %s" % self.id
-        self.save()
-        if self.mapeador == 1:
-            t = threading.Thread(target=self.run_bowtie)
-        elif self.mapeador == 2:
-            t = threading.Thread(target=self.run_bowtie)  # Replace for bwa when ready
+        self.save()    
+        t = threading.Thread(target=self.run_bowtie, args=reference, kwargs={'reads_1': reads_1, 'reads_2': reads_2, 'reads_se': reads_se, 'type': type})
         t.setDaemon(True)
-        t.run()
+        t.start()
 
     class Meta:
         verbose_name_plural = "Procesos de mapeo"
@@ -157,4 +155,32 @@ class Mapeo(models.Model):
 
 
 class ExpDiff(models.Model):
-    sam_input = []
+    name = models.TextField(default="ExpDiff Results")
+    procesos = models.ManyToManyField(Proceso)    
+    out_results = models.ForeignKey(File, null=True, related_name="file_results_expdiff")
+    out_params = models.ForeignKey(File, null=True, related_name="file_rparams_expdiff")
+    profile = models.ForeignKey(Profile)
+
+    def run_express(self, reference, bam_file):
+        self.name = "ExpDiff Results. Exp: %s " % self.id
+        self.save()
+        out_dir = "/tmp/xprs_out%s" % str(randint(1, 65000))
+        comando = "express -o %s %s %s" % (str(out_dir), reference, bam_file)
+        p = Proceso(comando=str(comando))
+        p.save()
+        self.procesos.add(p2)
+        p.run()
+        self.out_results = File(fileUpload=Django_File(open(out_dir+"/"+"results.xprs")), description="Salida " + self.name, profile=self.profile)
+        self.out_params = File(fileUpload=Django_File(open(out_dir+"/"+"params.xprs")), description="Salida " + self.name, profile=self.profile)
+        self.save()
+
+
+    def run(self, reference, bam_file):
+        self.name = "Experimento %s" % self.id
+        self.save()
+        t = threading.Thread(target=self.run_express, args=(reference, bam_file))  # Replace for bwa when ready
+        t.setDaemon(True)
+        t.run()
+
+    def __unicode__(self):
+        print name
