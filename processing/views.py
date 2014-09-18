@@ -62,7 +62,7 @@ def register_user(request):
 
 
 
-############# File Upload ###############
+############# Files ###############
 
 @login_required(login_url='/login/')
 def filesubmit(request): 
@@ -78,6 +78,11 @@ def filesubmit(request):
         #    print e
     else:
         return render(request, 'upload.html')
+
+
+@login_required(login_url='/login/')
+def delete_file(request):
+    return render(request, 'delete_file_success.html')
 
 ############# PAGE RENDER ###############
 def home(request):
@@ -117,3 +122,9 @@ def show_files(request):
 def show_fileupload(request):
     form = UploadFileForm()
     return render(request, 'fileupload.html',{'form':form})
+
+
+@login_required(login_url='/login/')
+def show_edit_file(request):
+    return render(request, 'show_edit_file.html')
+
