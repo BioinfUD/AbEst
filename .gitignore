@@ -2,3 +2,8 @@ files/*
 *.pyc
 *.py~
 migrations
+bin/
+include/
+share/
+lib/
+.gitignore
