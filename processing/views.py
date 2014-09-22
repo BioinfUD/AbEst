@@ -80,15 +80,17 @@ def filesubmit(request):
 
 @login_required(login_url='/login/')
 def delete_file(request, fileID):
-    '''
-    hay que verificar si el usuario tiene un archivo con ese ID
-    '''
     try:
         file2del = File.objects.get(id=int(fileID))
-        file2del.delete()
-        return render(request, 'delete_file_success.html')
-    except:
-        return render(request, 'delete_file_error.html')
+        profile = ser = User.objects.select_related().get(id=request.user.pk).profile
+        if file2del.profile == profile:
+            file2del.delete()
+            return render(request, 'delete_file_success.html')
+        else:
+            e = 'Este archivo no es de tu propiedad'
+            return render(request, 'delete_file_error.html', {'error': e})
+    except Exception, e:
+        return render(request, 'delete_file_error.html', {'error': e})
 
 
 @login_required(login_url='/login/')
@@ -123,7 +125,10 @@ def home(request):
 
 @login_required(login_url='/login/')
 def bowtie_form(request):
-    return render(request, 'bowtie_form.html')
+    profile = User.objects.select_related().get(id=request.user.pk).profile
+    fastaFiles = File.objects.all().filter(profile = profile).filter(ext='fasta')
+    fastqFiles = File.objects.all().filter(profile = profile).filter(ext='fastq')
+    return render(request, 'bowtie_form.html', {'fastqList': fastqFiles, 'fastaList': fastaFiles})
 
 
 @login_required(login_url='/login/')
