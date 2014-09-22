@@ -108,6 +108,7 @@ def show_edit_file(request, fileID):
 def editfile(request):
     desc = request.POST.get('description', '')
     fileID = request.POST.get('fileid', '')
+
     try:
         profile = User.objects.select_related().get(id=request.user.pk).profile
         instance = File.objects.get(id=int(fileID))
@@ -133,7 +134,10 @@ def bowtie_form(request):
 
 @login_required(login_url='/login/')
 def bwa_form(request):
-    return render(request, 'bwa_form.html')
+    profile = User.objects.select_related().get(id=request.user.pk).profile
+    fastaFiles = File.objects.all().filter(profile = profile).filter(ext='fasta')
+    fastqFiles = File.objects.all().filter(profile = profile).filter(ext='fastq')
+    return render(request, 'bwa_form.html', {'fastqList': fastqFiles, 'fastaList': fastaFiles})
 
 
 @login_required(login_url='/login/')
@@ -182,4 +186,39 @@ def download_file(request, id_file):
     filename = file_path.split("/")[-1]
     response['Content-Disposition'] = 'attachment; filename=%s' % filename
     response['X-Sendfile'] = file_path
+    return response
+
+
+@login_required(login_url='/login/')
+def mapping(request):
+    #REFERENCE FILE PATH
+    reference_id = request.POST.get('reference', '')
+    reference_path = File.objects.get(id=int(reference_id)).fileUpload.path
+    #RIGHT READS FILE PATH
+    rreads_id = request.POST.get('rreads', '')
+    rreads_path = File.objects.get(id=int(rreads_id)).fileUpload.path
+    #LEFT READS FILE PATH
+    lreads_id = request.POST.get('lreads', '')
+    lreads_path = File.objects.get(id=int(lreads_id)).fileUpload.path
+    #CONFIG
+    type_id = request.POST.get('type', '')
+    mapping_id = request.POST.get('mapping', '')
+    profile = User.objects.select_related().get(id=request.user.pk).profile
+
+    if mapping_id == 0:
+        if type_id == 1:
+            m = Mapeo(mapeador=0, tipo=1, profile=profile)
+            m.save()
+        else:
+            m = Mapeo(mapeador=0, tipo=2, profile=profile)
+            m.save()
+    else:
+        if type_id == 1:
+            m = Mapeo(mapeador=1, tipo=1, profile=profile)
+            m.save()
+        else:
+            m = Mapeo(mapeador=1, tipo=2, profile=profile)
+            m.save()
+
+    m.run_bowtie(reference=reference_path, reads_1=[rreads_path], reads_2=[lreads_path])
     return response

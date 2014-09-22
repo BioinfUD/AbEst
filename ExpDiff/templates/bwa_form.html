@@ -19,57 +19,45 @@
         <h1>
             BWA
         </h1>
-        <form action="/register/" method="post">
+        <form action="/mapping/" method="post">
                 {% csrf_token %}
                 
                 <div class="form-group">
-                    <label for="id_transcriptome"><h4>Fasta file:</h4></label>
-                    *Fasta fales of the reference transcriptome or unigene set
-                    <select class="form-control" id="id_transcriptome" name="transcriptome">
+                    <label for="id_reference">Fasta file:</label>
+                    <select class="form-control" id="id_reference" name="reference" required>
                         <option value="">select a file</option>
-                        <option value="f">1. diploria_stringosa.fasta</option>
-                        <option value="m">2. sequence.fasta</option>
-                        <option value="f">3. aspiria.fasta</option>
-                        <option value="m">4. sequence2.fasta</option>
-                        <option value="f">5. hectomasta.fasta</option>
+                        {% for f in fastaList %}
+                            <option value='{{f.id}}'>{{f.fileUpload.name}}</option>
+                        {% endfor %}
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="id_rreads"><h4>FastQ file:</h4></label>
-                    *FastQ file of the sequenced cDNA transcripts
-                    <select class="form-control" id="id_rreads" name="rreads">
+                    <label for="id_rreads">Right reads file:</label>
+                    <select class="form-control" id="id_rreads" name="rreads"  required>
                         <option value="">select a file</option>
-                        <option value="f">1. diploria_stringosa.fastq</option>
-                        <option value="m">2. sequence3.fastq</option>
-                        <option value="f">3. aspiria.fastq</option>
-                        <option value="m">4. sequence4.fastq</option>
-                        <option value="f">5. hectomasta.fastq</option>
+                        {% for f in fastqList %}
+                            <option value='{{f.id}}'>{{f.fileUpload.name}}</option>
+                        {% endfor %}
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="id_lreads"><h4>Treatment groups file:</h4></label>
-                    *A file explaining which FASTQ fies corresponf to treatment groups
-                    <select class="form-control" id="id_lreads" name="lreads">
+                    <label for="id_lreads">Left reads file:</label>
+                    <select class="form-control" id="id_lreads" name="lreads"  required>
                         <option value="">select a file</option>
-                        <option value="f">1. diploria_stringosa.fasta</option>
-                        <option value="m">2. sequence.fasta</option>
-                        <option value="f">3. aspiria.fasta</option>
-                        <option value="m">4. sequence2.fasta</option>
-                        <option value="f">5. hectomasta.fasta</option>
+                        {% for f in fastqList %}
+                            <option value='{{f.id}}'>{{f.fileUpload.name}}</option>
+                        {% endfor %}
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="id_lreads"><h4>List file:</h4></label>
-                    *A tab-delimited file that lists transcripts and their corresponding genes
-                    <select class="form-control" id="id_lreads" name="lreads">
-                        <option value="">select a file</option>
-                        <option value="f">1. diploria_stringosa.fasta</option>
-                        <option value="m">2. sequence.fasta</option>
-                        <option value="f">3. aspiria.fasta</option>
-                        <option value="m">4. sequence2.fasta</option>
-                        <option value="f">5. hectomasta.fasta</option>
+                    <label for="id_type">Reference file:</label>
+                    <select class="form-control" id="id_type" name="type"  required>
+                        <option value="">select a type</option>
+                        <option value="1">Single end</option>
+                        <option value="2">Paired end</option>
                     </select>
                 </div>
+                <input type='hidden' name='mapping' id='id_mapping' value='0'>
                 <button type="submit" class="btn btn-default">Send</button>
             </form>
     </div>
