@@ -12,17 +12,21 @@ u = User(username=email,email=email)
 u.set_password(password)
 u.save()
 p = Profile(user=u,
-                      email=email,
-                      firstName="N",
-                      lastName="N")
+               email=email,
+                firstName="N",
+               lastName="N")
 p.save()
 
 p = Profile.objects.get(id=1)
-m = Mapeo(name="Exp", mapeador=0, tipo=1, profile=p)
+m = Mapeo(name="Experimento", mapeador=0, tipo=1, profile=p)
 m.save()
-m.run_bowtie(reference="/home/null3d/Git_repos/expdiff-ud/files/ecoli.fa", reads_1=["/home/null3d/Git_repos/expdiff-ud/files/s_1_1_10k.fq"], reads_2=["/home/null3d/Git_repos/expdiff-ud/files/s_1_2_10k.fq"])
+m.run(reference="/home/null3d/Git_repos/expdiff-ud/files/ecoli.fa", reads_1=["/home/null3d/Git_repos/expdiff-ud/files/s_1_1_10k.fq"], reads_2=["/home/null3d/Git_repos/expdiff-ud/files/s_1_2_10k.fq"], tipo=1)
 
-m = ExpDiff(reference="/home/null3d/Git_repos/expdiff-ud/files/Exp.bam", )
+from processing.models import *
+p = Profile.objects.get(id=1)
+ab = Abundace_Estimation(profile=p)
+ab.run(reference="/home/null3d/Git_repos/expdiff-ud/files/ecoli.fa", bam_file="/home/null3d/Git_repos/expdiff-ud/files/Experimento_1_OMlyWGW.bam", )
+
 mapeo = Mapeo(name="Exp", mapeador=0, tipo=1, profile=new_profile)
 mapeo.save()
 mapeo.run_bowtie(reference="popo")
