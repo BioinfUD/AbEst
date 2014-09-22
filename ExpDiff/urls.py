@@ -22,6 +22,7 @@ urlpatterns = patterns('processing.views',
     url(r'^files/(?P<id_file>\d+)/$', 'download_file', name="download_file"),
     url(r'^process/show/(?P<process_id>\d+)/$', 'show_specific_process', name="show_specific_process"),
     url(r'^process/show/$', 'show_process', name='show_process'),
+    url(r'^editfile/$', 'editfile'),
     # Examples:
     # url(r'^$', 'ExpDiff.views.home', name='home'),
     # url(r'^ExpDiff/', include('ExpDiff.foo.urls')),

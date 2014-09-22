@@ -22,7 +22,7 @@ def auth_view(request):
         return render(request, 'home.html')
     else:
         return render(request, 'error_login.html')
-
+ 
 
 def error_login(request):
     return render(request, 'error_login.html')
@@ -60,7 +60,7 @@ def register_user(request):
         return render(request, 'register.html')
 
 
-#  ############ Files ###############
+#  ############ FILES ###############
 
 @login_required(login_url='/login/')
 def filesubmit(request):
@@ -84,10 +84,36 @@ def delete_file(request, fileID):
     hay que verificar si el usuario tiene un archivo con ese ID
     '''
     try:
-        file2del = File.objects.get(id=fileID)
+        file2del = File.objects.get(id=int(fileID))
+        file2del.delete()
+        return render(request, 'delete_file_success.html')
     except:
-        pass
-    return render(request, 'delete_file_success.html')
+        return render(request, 'delete_file_error.html')
+
+
+@login_required(login_url='/login/')
+def show_fileupload(request):
+    form = UploadFileForm()
+    return render(request, 'fileupload.html', {'form': form})
+
+
+@login_required(login_url='/login/')
+def show_edit_file(request, fileID):
+    return render(request, 'show_edit_file.html', {'fileID': fileID})
+
+
+@login_required(login_url='/login/')
+def editfile(request):
+    desc = request.POST.get('description', '')
+    fileID = request.POST.get('fileid', '')
+    try:
+        profile = User.objects.select_related().get(id=request.user.pk).profile
+        instance = File.objects.get(id=int(fileID))
+        instance.description = desc
+        instance.save()
+        return render(request, 'editfile_success.html')
+    except Exception, e:
+        return render(request, 'editfile_error.html', {'error': e})
 
 
 #  ############ PAGE RENDER ###############
@@ -119,7 +145,7 @@ def upload_success(request):
 def show_files(request):
     user = User.objects.select_related().get(id=request.user.pk)
     profile = user.profile
-    file_list = File.objects.all().filter(s=profile)
+    file_list = File.objects.all().filter(profile = profile)
     print file_list
     return render(request, 'files.html', {'file_list': file_list})
 
@@ -133,23 +159,10 @@ def show_process(request):
 
 
 @login_required(login_url='/login/')
-def show_fileupload(request):
-    form = UploadFileForm()
-    return render(request, 'fileupload.html', {'form': form})
-
-
-@login_required(login_url='/login/')
-def show_edit_file(request):
-    return render(request, 'show_edit_file.html')
-
-
-<<<<<<< HEAD
-@login_required(login_url='/login/')
 def show_processes(request):
     return render(request, 'show_processes.html')
 
 
-=======
 #  Show standard err and output of process
 @login_required(login_url='/login/')
 def show_specific_process(request, process_id):
@@ -165,4 +178,3 @@ def download_file(request, id_file):
     response['Content-Disposition'] = 'attachment; filename=%s' % filename
     response['X-Sendfile'] = file_path
     return response
->>>>>>> 9d3657e2672018c57067dc3a1a2bb1038cf985d2

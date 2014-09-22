@@ -41,7 +41,7 @@ class Profile(models.Model):
 class File(models.Model):
     fileUpload = models.FileField()
     description = models.TextField(default="")
-    s = models.ForeignKey(Profile)
+    profile = models.ForeignKey(Profile)
 
     def __unicode__(self):
         return u"ARCHIVO \n Location: %s \n Description: %s " % (self.fileUpload.path, self.description)
