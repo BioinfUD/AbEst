@@ -81,7 +81,14 @@ def filesubmit(request):
 
 
 @login_required(login_url='/login/')
-def delete_file(request):
+def delete_file(request, fileID):
+    '''
+    hay que verificar si el usuario tiene un archivo con ese ID
+    '''
+    try:
+        file2del = File.objects.get(id=fileID)
+    except:
+        pass
     return render(request, 'delete_file_success.html')
 
 ############# PAGE RENDER ###############
@@ -127,4 +134,10 @@ def show_fileupload(request):
 @login_required(login_url='/login/')
 def show_edit_file(request):
     return render(request, 'show_edit_file.html')
+
+
+@login_required(login_url='/login/')
+def show_processes(request):
+    return render(request, 'show_processes.html')
+
 
