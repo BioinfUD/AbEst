@@ -194,31 +194,59 @@ def mapping(request):
     #REFERENCE FILE PATH
     reference_id = request.POST.get('reference', '')
     reference_path = File.objects.get(id=int(reference_id)).fileUpload.path
-    #RIGHT READS FILE PATH
-    rreads_id = request.POST.get('rreads', '')
-    rreads_path = File.objects.get(id=int(rreads_id)).fileUpload.path
-    #LEFT READS FILE PATH
-    lreads_id = request.POST.get('lreads', '')
-    lreads_path = File.objects.get(id=int(lreads_id)).fileUpload.path
     #CONFIG
     type_id = request.POST.get('type', '')
     mapping_id = request.POST.get('mapping', '')
     profile = User.objects.select_related().get(id=request.user.pk).profile
 
-    if mapping_id == 0:
-        if type_id == 1:
+    reads_se = []
+    reads_1 = []
+    reads_2 = []
+
+    if mapping_id == '0':
+        #BWA
+        if type_id == '1':
+            #SINGLE
+            reads_id = request.POST.getlist('reads', '')
+            for r in reads_id:
+                reads_se.append(File.objects.get(id=int(r)).fileUpload.path)
+            #print reads_se
             m = Mapeo(mapeador=0, tipo=1, profile=profile)
             m.save()
         else:
+            #PAIRED
+            #RIGHT READS FILE PATH
+            rreads_id = request.POST.getlist('rreads', '')
+            for rr in rreads_id:
+                reads_1.append(File.objects.get(id=int(rr)).fileUpload.path)
+            #LEFT READS FILE PATH
+            lreads_id = request.POST.getlist('lreads', '')
+            for lr in rreads_id:
+                reads_2.append(File.objects.get(id=int(lr)).fileUpload.path)
             m = Mapeo(mapeador=0, tipo=2, profile=profile)
             m.save()
     else:
-        if type_id == 1:
+        #BOWTIE
+        if type_id == '1':
+            #SINGLE
+            reads_id = request.POST.getlist('reads', '')
+            for r in reads_id:
+                reads_se.append(File.objects.get(id=int(r)).fileUpload.path)
+            #print reads_se
             m = Mapeo(mapeador=1, tipo=1, profile=profile)
             m.save()
         else:
+            #PAIRED
+            #RIGHT READS FILE PATH
+            rreads_id = request.POST.getlist('rreads', '')
+            for rr in rreads_id:
+                reads_1.append(File.objects.get(id=int(rr)).fileUpload.path)
+            #LEFT READS FILE PATH
+            lreads_id = request.POST.getlist('lreads', '')
+            for lr in rreads_id:
+                reads_2.append(File.objects.get(id=int(lr)).fileUpload.path)
             m = Mapeo(mapeador=1, tipo=2, profile=profile)
             m.save()
 
-    m.run_bowtie(reference=reference_path, reads_1=[rreads_path], reads_2=[lreads_path])
+    m.run_bowtie(reference=reference_path, reads_1=reads_1, reads_2=reads_2, reads_se=reads_se)
     return response
