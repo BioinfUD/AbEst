@@ -101,10 +101,10 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'ExpDiff.urls'
+ROOT_URLCONF = 'Abundance_estimation.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'ExpDiff.wsgi.application'
+WSGI_APPLICATION = 'Abundance_estimation.wsgi.application'
 
 TEMPLATE_DIRS = [
     os.path.join(os.path.dirname(__file__) , 'templates').replace('\\','/')

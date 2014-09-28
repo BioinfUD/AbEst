@@ -25,8 +25,8 @@ urlpatterns = patterns('processing.views',
     url(r'^editfile/$', 'editfile'),
     url(r'^mapping/$', 'mapping'),
     # Examples:
-    # url(r'^$', 'ExpDiff.views.home', name='home'),
-    # url(r'^ExpDiff/', include('ExpDiff.foo.urls')),
+    # url(r'^$', 'Abundance_estimation.views.home', name='home'),
+    # url(r'^Abundance_estimation/', include('Abundance_estimation.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
