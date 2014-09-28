@@ -123,7 +123,6 @@ class Mapeo(models.Model):
         t1.setDaemon(True)
         t1.start()
         while t1.isAlive():
-            print "t1 %s" % t1.isAlive()
             sleep(1)
         file_name = "/tmp/%s.bam" % self.name.replace(" ", "_")
         tmp_sam = "/tmp/%s" % ("tmp_%s.sam" % randint(1, 1000000))
@@ -137,12 +136,12 @@ class Mapeo(models.Model):
             comando = "bowtie -a -S -p %s  %s -s %s  %s | samtools view -bSx - > %s " % (settings.CORES, reference_index, mates, tmp_sam)
         p2 = Proceso(comando=str(comando), profile=self.profile)
         p2.save()
+        print p2
         self.procesos.add(p2)
         t2 = threading.Thread(target=p2.run_process)
         t2.setDaemon(True)
         t2.start()
         while t2.isAlive():
-            print "T2 %s " % t2.isAlive()
             sleep(1)
         comando = "samtools view -bS  %s -o %s" % (tmp_sam, file_name)
         p3 = Proceso(comando=str(comando), profile=self.profile)
@@ -152,10 +151,9 @@ class Mapeo(models.Model):
         t3.setDaemon(True)
         t3.start()
         while t3.isAlive():
-            print "T3 %s " % t2.isAlive()
             sleep(1)
         self.save()
-        out_file = File(fileUpload=Django_File(open(file_name)), description="Salida " + self.name, s=self.profile)
+        out_file = File(fileUpload=Django_File(open(file_name)), description="Salida " + self.name, profile=self.profile, ext="bam")
         out_file.save()
         self.out_file = out_file
 
@@ -191,10 +189,10 @@ class Abundace_Estimation(models.Model):
         t1.start()
         while t1.isAlive():
             sleep(1)
-        f1 = File(fileUpload=Django_File(open(out_dir + "/" + "results.xprs")), description="Salida " + self.name, s=self.profile)
+        f1 = File(fileUpload=Django_File(open(out_dir + "/" + "results.xprs")), description="Salida " + self.name, profile=self.profile, ext="xprs")
         f1.save()
         self.out_results = f1
-        f2 = File(fileUpload=Django_File(open(out_dir + "/" + "params.xprs")), description="Salida " + self.name, s=self.profile)
+        f2 = File(fileUpload=Django_File(open(out_dir + "/" + "params.xprs")), description="Salida " + self.name, profile=self.profile, ext="xprs")
         f2.save()
         self.out_params = f2
         self.save()

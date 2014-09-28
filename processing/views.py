@@ -69,7 +69,8 @@ def filesubmit(request):
         desc = request.POST.get('description', '')
         user = User.objects.select_related().get(id=request.user.pk)
         p = user.profile
-        instance = File(fileUpload=request.FILES['file'], description=desc, profile=p)
+        ext = str(request.FILES['file']).split(".")[-1]
+        instance = File(fileUpload=request.FILES['file'], description=desc, profile=p,ext=ext)
         instance.save()
         return HttpResponseRedirect('/files/success/')
         #  except Exception as e:
@@ -127,8 +128,8 @@ def home(request):
 @login_required(login_url='/login/')
 def bowtie_form(request):
     profile = User.objects.select_related().get(id=request.user.pk).profile
-    fastaFiles = File.objects.all().filter(profile = profile).filter(ext='fasta')
-    fastqFiles = File.objects.all().filter(profile = profile).filter(ext='fastq')
+    fastaFiles = File.objects.all().filter(profile = profile).filter(ext__in=['fasta','fa'])
+    fastqFiles = File.objects.all().filter(profile = profile).filter(ext__in=['fastq','fq'])
     return render(request, 'bowtie_form.html', {'fastqList': fastqFiles, 'fastaList': fastaFiles})
 
 
@@ -155,7 +156,6 @@ def show_files(request):
     user = User.objects.select_related().get(id=request.user.pk)
     profile = user.profile
     file_list = File.objects.all().filter(profile = profile)
-    print file_list
     return render(request, 'files.html', {'file_list': file_list})
 
 
@@ -211,7 +211,7 @@ def mapping(request):
             for r in reads_id:
                 reads_se.append(File.objects.get(id=int(r)).fileUpload.path)
             #print reads_se
-            m = Mapeo(mapeador=0, tipo=1, profile=profile)
+            m = Mapeo(mapeador=0, tipo=0, profile=profile)
             m.save()
         else:
             #PAIRED
@@ -223,7 +223,7 @@ def mapping(request):
             lreads_id = request.POST.getlist('lreads', '')
             for lr in rreads_id:
                 reads_2.append(File.objects.get(id=int(lr)).fileUpload.path)
-            m = Mapeo(mapeador=0, tipo=2, profile=profile)
+            m = Mapeo(mapeador=0, tipo=1, profile=profile)
             m.save()
     else:
         #BOWTIE
@@ -233,7 +233,7 @@ def mapping(request):
             for r in reads_id:
                 reads_se.append(File.objects.get(id=int(r)).fileUpload.path)
             #print reads_se
-            m = Mapeo(mapeador=1, tipo=1, profile=profile)
+            m = Mapeo(mapeador=1, tipo=0, profile=profile)
             m.save()
         else:
             #PAIRED
@@ -245,8 +245,9 @@ def mapping(request):
             lreads_id = request.POST.getlist('lreads', '')
             for lr in rreads_id:
                 reads_2.append(File.objects.get(id=int(lr)).fileUpload.path)
-            m = Mapeo(mapeador=1, tipo=2, profile=profile)
+            m = Mapeo(mapeador=1, tipo=1, profile=profile)
             m.save()
 
-    m.run_bowtie(reference=reference_path, reads_1=reads_1, reads_2=reads_2, reads_se=reads_se)
+    m.run(reference=reference_path, reads_1=reads_1, reads_2=reads_2, reads_se=reads_se)
+    #Falta el response
     return response
