@@ -216,6 +216,7 @@ def Abundance_estimation(request):
     a = Abundace_Estimation(profile=profile)
     a.save()
     a.run(reference=reference_path, bam_file=sam_path)
+    return response
 
 
 @login_required(login_url='/login/')
