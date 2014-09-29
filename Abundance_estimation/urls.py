@@ -24,6 +24,7 @@ urlpatterns = patterns('processing.views',
     url(r'^process/show/$', 'show_process', name='show_process'),
     url(r'^editfile/$', 'editfile'),
     url(r'^mapping/$', 'mapping'),
+    url(r'^Abundance_estimation/$', 'Abundance_estimation'),
     # Examples:
     # url(r'^$', 'Abundance_estimation.views.home', name='home'),
     # url(r'^Abundance_estimation/', include('Abundance_estimation.foo.urls')),

@@ -4,27 +4,27 @@
     <div class="col-sm-3">
         <nav style="border-radius: 5px; border: solid rgb(161, 161, 161) 2px;">
           <ul class="nav nav-pills nav-stacked span2">
-            <li><a href="/files/">My files</a></li>
-            <li><a href="#">Otra opcion</a></li>
+            <li><a href="/files/">Mis archivos</a></li>
+            <li><a href="/process/show/">Lista de procesos</a></li>
           </ul>
         </nav>
     </div>
     <div class="col-sm-9" style="border-left: solid rgb(80, 121, 150) 1px;">
         
         <h1>
-            File upload
+            Subir Archivo
         </h1>
         <form action="/files/submit/" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="form-group">
-                    <label for="id_description"><h4>Description:</h4></label>
+                    <label for="id_description"><h4>Descripción del archivo:</h4></label>
                     <input class="form-control" id="id_description" name="description" type="text">
                 </div>
                 <div class="form-group">
-                    <label for="id_fileUploaded"><h4>Fileuploaded:</h4></label>
+                    <label for="id_fileUploaded"><h4>Archivo:</h4></label>
                     <input class="form-control" id="id_fileUploaded" name="file" type="file">
                 </div>
-                <button type="submit" class="btn btn-default">Send</button>
+                <button type="submit" class="btn btn-default">Subir</button>
             </form>
 
     </div>

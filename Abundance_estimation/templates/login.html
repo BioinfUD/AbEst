@@ -3,23 +3,20 @@
 <div class="row">
     <div class="col-sm-4"></div>
     <div class="col-sm-4">
-        {% if form.errors %}
-            <p class="error">Sorry. that is not a valid username or password</p>
-        {% endif %}
         <form role="form" action="/login/auth/" method="post">
             {% csrf_token %}
             <div class="form-group">
-                <label for="email">Email address</label>
+                <label for="email">Correo electronico</label>
                 <input type="email" class="form-control" name="email" id="email" placeholder="Enter email">
             </div>
             <div class="form-group">
-                <label for="password">Password</label>
+                <label for="password">Contraseña</label>
                 <input type="password" class="form-control" name="password" id="password" placeholder="Password">
             </div>
-            <button type="submit" class="btn btn-default">login</button>
+            <button type="submit" class="btn btn-default">Acceder</button>
         </form>
         <div class="row">
-            <p class="text-muted">New to SocialEngine?: <a href="/register/">Sign up</a></p>
+            <p class="text-muted">¿No posee una cuenta?: <a href="/register/">Registrarse</a></p>
         </div>
     </div>
     <div class="col-sm-4"></div>

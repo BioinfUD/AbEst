@@ -4,9 +4,9 @@
     <div class="col-sm-3">
         <nav style="border-radius: 5px; border: solid rgb(161, 161, 161) 2px;">
           <ul class="nav nav-pills nav-stacked span2">
-            <li><a href="/diffexp/">Differential expression</a></li>
+            <li><a href="/diffexp/">Estimación de abundancia</a></li>
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Mapping <span class="caret"></span></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Mapear <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
                 <li><a href="/bowtie/">Bowtie</a></li>
                 <li><a href="/bwa/">BWA</a></li>
@@ -17,20 +17,27 @@
     </div>
     <div class="col-sm-9" style="border-left: solid rgb(80, 121, 150) 1px;">
         <h1>
-            Differential expression
-        </h1>
-        <form action="/register/" method="post">
+            Estimación de abundancia
+        </h1><br><br>
+        <form action="/Abundance_estimation/" method="post">
                 {% csrf_token %}
                 
                 <div class="form-group">
-                    <label for="id_transcriptome"><h4>SAM file:</h4></label>
+                    <label for="id_reference">Archivo de referencia:</label>
+                    <select class="form-control" id="id_reference" name="reference"  required>
+                        <option value="">seleccione un archivo</option>
+                        {% for f in fastaList %}
+                            <option value='{{f.id}}'>{{f.fileUpload.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="id_transcriptome">Archivo SAM:</label>
                     <select class="form-control" id="id_transcriptome" name="transcriptome">
-                        <option value="">select a file</option>
-                        <option value="f">1. diploria_stringosa.sam</option>
-                        <option value="m">2. sequence.sam</option>
-                        <option value="f">3. aspiria.sam</option>
-                        <option value="m">4. sequence2.sam</option>
-                        <option value="f">5. hectomasta.sam</option>
+                        <option value="">seleccione un archivo</option>
+                        {% for b in bamList %}
+                            <option value='{{f.id}}'>{{b.fileUpload.name}}</option>
+                        {% endfor %}
                     </select>
                 </div>
                 

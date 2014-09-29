@@ -4,9 +4,9 @@
     <div class="col-sm-3">
         <nav style="border-radius: 5px; border: solid rgb(161, 161, 161) 2px;">
           <ul class="nav nav-pills nav-stacked span2">
-            <li><a href="/diffexp/">Differential expression</a></li>
+            <li><a href="/diffexp/">Estimación de abundancia</a></li>
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Mapping <span class="caret"></span></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Mapear <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
                 <li><a href="/bowtie/">Bowtie</a></li>
                 <li><a href="/bwa/">BWA</a></li>
@@ -21,7 +21,7 @@
         </h1>
         <br><br>
         <div class="form-group">
-            <label>Files type:</label><br>
+            <label>Tipo de archivos:</label><br>
             <input type="radio" name="filetype" value="single" id='singleradio' checked> Single end<br>
             <input type="radio" name="filetype" value="paired" id='singleradio' > Paired end<br>
         </div>
@@ -29,16 +29,16 @@
             <form id='formsingle' action="/mapping/" method="post">
                 {% csrf_token %}
                 <div class="form-group">
-                    <label for="id_reference">Reference file:</label>
+                    <label for="id_reference">Archivo de referencia:</label>
                     <select class="form-control" id="id_reference" name="reference"  required>
-                        <option value="">select a file</option>
+                        <option value="">seleccione un archivo</option>
                         {% for f in fastaList %}
                             <option value='{{f.id}}'>{{f.fileUpload.name}}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="id_reads">Reads file:</label>
+                    <label for="id_reads">Archivo de lecturas:</label>
                     <select class="form-control" id="id_reads" name="reads" multiple required>
                         {% for f in fastqList %}
                             <option value='{{f.id}}'>{{f.fileUpload.name}}</option>
@@ -54,9 +54,9 @@
             <form id='formpaired' action="/mapping/" method="post">
                 {% csrf_token %}
                 <div class="form-group">
-                    <label for="id_reference">Reference file:</label>
+                    <label for="id_reference">Archivo de referencia:</label>
                     <select class="form-control" id="id_reference" name="reference"  required>
-                        <option value="">select a file</option>
+                        <option value="">seleccione un archivo</option>
                         {% for f in fastaList %}
                             <option value='{{f.id}}'>{{f.fileUpload.name}}</option>
                         {% endfor %}
@@ -65,7 +65,7 @@
                 <div class="form-group">
                     <div class="row">
                         <div class="col-sm-6">
-                            <label for="id_lreads">Left reads file:</label>
+                            <label for="id_lreads">Archivo de lecturas izquierdas:</label>
                             <select class="form-control" id="id_lreads" name="lreads" multiple required>
                                 {% for f in fastqList %}
                                     <option value='{{f.id}}'>{{f.fileUpload.name}}</option>
@@ -73,7 +73,7 @@
                             </select>
                         </div>
                         <div class="col-sm-6">
-                            <label for="id_rreads">Right reads file:</label>
+                            <label for="id_rreads">Archivo de lecturas derechas:</label>
                             <select class="form-control" id="id_rreads" name="rreads" multiple required>
                                 {% for f in fastqList %}
                                     <option value='{{f.id}}'>{{f.fileUpload.name}}</option>

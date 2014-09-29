@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from forms import *
 from processing.models import *
 from django.shortcuts import render
@@ -21,11 +22,13 @@ def auth_view(request):
         login(request, user)
         return render(request, 'home.html')
     else:
-        return render(request, 'error_login.html')
+        error = 'No se ha podido acceder, intente nuevamente'
+        return render(request, 'error.html', {'error':error})
  
 
 def error_login(request):
-    return render(request, 'error_login.html')
+    error = 'El ususario o la contraseña son incorrectos'
+    return render(request, 'error.html', {'error':error})
 
 
 def log_in(request):
@@ -53,9 +56,11 @@ def register_user(request):
                                   lastName=request.POST.get('lastName', ''),
                                   )
             new_profile.save()
-            return render(request, 'registration_success.html')
+            success = 'Se ha registrado satisfactoriamente.'
+            return render(request, 'success.html',{'success': success})
         else:
-            return render(request, 'registration_error.html')
+            error = 'Las contrasenas no son iguales'
+            return render(request, 'error.html', {'error': error})
     else:
         return render(request, 'register.html')
 
@@ -72,7 +77,8 @@ def filesubmit(request):
         ext = str(request.FILES['file']).split(".")[-1]
         instance = File(fileUpload=request.FILES['file'], description=desc, profile=p,ext=ext)
         instance.save()
-        return HttpResponseRedirect('/files/success/')
+        success = 'El archivo se ha guardado satisfactoriamente.'
+        return render(request, 'success.html',{'success': success})
         #  except Exception as e:
         #    print e
     else:
@@ -86,12 +92,13 @@ def delete_file(request, fileID):
         profile = ser = User.objects.select_related().get(id=request.user.pk).profile
         if file2del.profile == profile:
             file2del.delete()
-            return render(request, 'delete_file_success.html')
+            success = 'Se ha eliminado el archivo satisfactoriamente.'
+            return render(request, 'success.html',{'success': success})
         else:
-            e = 'Este archivo no es de tu propiedad'
-            return render(request, 'delete_file_error.html', {'error': e})
+            error = 'Este archivo no le pertenece'
+            return render(request, 'error.html', {'error':error})
     except Exception, e:
-        return render(request, 'delete_file_error.html', {'error': e})
+        return render(request, 'error.html', {'error': e})
 
 
 @login_required(login_url='/login/')
@@ -115,9 +122,11 @@ def editfile(request):
         instance = File.objects.get(id=int(fileID))
         instance.description = desc
         instance.save()
-        return render(request, 'editfile_success.html')
+        success = 'Se ha editado el archivo satisfactoriamente.'
+        return render(request, 'success.html',{'success': success})
     except Exception, e:
-        return render(request, 'editfile_error.html', {'error': e})
+        error = 'No se pudieron guardar los datos'
+        return render(request, 'error.html', {'error':error})
 
 
 #  ############ PAGE RENDER ###############
@@ -136,19 +145,23 @@ def bowtie_form(request):
 @login_required(login_url='/login/')
 def bwa_form(request):
     profile = User.objects.select_related().get(id=request.user.pk).profile
-    fastaFiles = File.objects.all().filter(profile = profile).filter(ext='fasta')
-    fastqFiles = File.objects.all().filter(profile = profile).filter(ext='fastq')
+    fastaFiles = File.objects.all().filter(profile = profile).filter(ext__in=['fasta','fa'])
+    fastqFiles = File.objects.all().filter(profile = profile).filter(ext__in=['fastq','fq'])
     return render(request, 'bwa_form.html', {'fastqList': fastqFiles, 'fastaList': fastaFiles})
 
 
 @login_required(login_url='/login/')
 def diffexp_form(request):
-    return render(request, 'diffexp_form.html')
+    profile = User.objects.select_related().get(id=request.user.pk).profile
+    bamList = File.objects.all().filter(profile = profile).filter(ext__in=['bam','sam'])
+    fastaList = File.objects.all().filter(profile = profile).filter(ext__in=['fasta','fa'])
+    return render(request, 'diffexp_form.html',{'bamList': bamList, 'fastaList': fastaList})
 
 
 @login_required(login_url='/login/')
 def upload_success(request):
-    return render(request, 'upload_success.html')
+    success = 'Se ha subido el archivo satisfactoriamente.'
+    return render(request, 'success.html',{'success': success})
 
 
 @login_required(login_url='/login/')
@@ -187,6 +200,22 @@ def download_file(request, id_file):
     response['Content-Disposition'] = 'attachment; filename=%s' % filename
     response['X-Sendfile'] = file_path
     return response
+
+
+@login_required(login_url='/login/')
+def Abundance_estimation(request):
+    #REFERENCE FILE PATH
+    reference_id = request.POST.get('reference', '')
+    reference_path = File.objects.get(id=int(reference_id)).fileUpload.path
+    #SAM FILE PATH
+    sam_id = request.POST.get('transcriptome', '')
+    sam_path = File.objects.get(id=int(sam_id)).fileUpload.path
+    #CONFIG
+    profile = User.objects.select_related().get(id=request.user.pk).profile
+
+    a = Abundace_Estimation(profile=profile)
+    a.save()
+    a.run(reference=reference_path, bam_file=sam_path)
 
 
 @login_required(login_url='/login/')
