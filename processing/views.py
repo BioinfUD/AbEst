@@ -10,6 +10,7 @@ from django.core.context_processors import csrf
 from django.contrib.auth.decorators import login_required
 from django.template import loader, Context, RequestContext
 from django.contrib.auth import authenticate, login, logout
+from django.core.servers.basehttp import FileWrapper
 import os
 
 
@@ -194,11 +195,14 @@ def show_specific_process(request, process_id):
 
 @login_required(login_url='/login/')
 def download_file(request, id_file):
-    response = HttpResponse(content_type='application/force-download')
     file_path = File.objects.get(id=id_file).fileUpload.path
+    wrapper = FileWrapper(file(file_path))
     filename = file_path.split("/")[-1]
+    response = HttpResponse(wrapper, content_type='application/force-download')
     response['Content-Disposition'] = 'attachment; filename=%s' % filename
-    response['X-Sendfile'] = file_path
+    response['Content-Length'] = os.path.getsize( file_path )
+    print os.path.getsize( file_path )
+    print file_path
     return response
 
 
