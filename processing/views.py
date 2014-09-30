@@ -220,7 +220,8 @@ def Abundance_estimation(request):
     a = Abundace_Estimation(profile=profile)
     a.save()
     a.run(reference=reference_path, bam_file=sam_path)
-    return response
+    success = 'El proceso se ha puesto en la cola de espera.'
+    return render(request, 'success.html', {'success': success})
 
 
 @login_required(login_url='/login/')
@@ -283,5 +284,5 @@ def mapping(request):
             m.save()
 
     m.run(reference=reference_path, reads_1=reads_1, reads_2=reads_2, reads_se=reads_se)
-    #Falta el response
-    return response
+    success = 'El proceso se ha puesto en la cola de espera.'
+    return render(request, 'success.html', {'success': success})
