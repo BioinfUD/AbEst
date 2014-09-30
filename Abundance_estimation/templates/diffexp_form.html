@@ -30,7 +30,7 @@
                     <select class="form-control" id="id_transcriptome" name="transcriptome">
                         <option value="">seleccione un archivo</option>
                         {% for b in bamList %}
-                            <option value='{{f.id}}'>{{b.fileUpload.name}}</option>
+                            <option value='{{b.id}}'>{{b.fileUpload.name}}</option>
                         {% endfor %}
                     </select>
                 </div>
