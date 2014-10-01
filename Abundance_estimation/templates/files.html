@@ -17,7 +17,7 @@
             {% for f in file_list %}
                 <div href="#" class="list-group-item glyphicon glyphicon-file">
                     <span class="" title="Description: {{f.description}}">
-                        {{f.fileUpload.name}}
+                        {{f.fileUpload.name|truncatechars:50}}
                     </span>
                     <span class="pull-right">
                         <span class="label label-success glyphicon glyphicon-edit" style="display: table-cell;">
