@@ -275,11 +275,11 @@ def mapping(request):
             #RIGHT READS FILE PATH
             rreads_id = request.POST.getlist('rreads', '')
             for rr in rreads_id:
-                reads_1.append(File.objects.get(id=int(rr)).fileUpload.path)
+                reads_2.append(File.objects.get(id=int(rr)).fileUpload.path)
             #LEFT READS FILE PATH
             lreads_id = request.POST.getlist('lreads', '')
             for lr in lreads_id:
-                reads_2.append(File.objects.get(id=int(lr)).fileUpload.path)
+                reads_1.append(File.objects.get(id=int(lr)).fileUpload.path)
             m = Mapeo(mapeador=1, tipo=1, profile=profile)
             m.save()
 
