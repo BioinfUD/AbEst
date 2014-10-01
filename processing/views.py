@@ -240,7 +240,7 @@ def mapping(request):
 
     if mapping_id == '0':
         #BWA
-        if type_id == '1':
+        if type_id == '0':
             #SINGLE
             reads_id = request.POST.getlist('reads', '')
             for r in reads_id:
@@ -262,7 +262,7 @@ def mapping(request):
             m.save()
     else:
         #BOWTIE
-        if type_id == '1':
+        if type_id == '0':
             #SINGLE
             reads_id = request.POST.getlist('reads', '')
             for r in reads_id:
