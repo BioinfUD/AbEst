@@ -34,6 +34,9 @@ class Profile(models.Model):
     firstName = models.CharField(max_length=30)
     lastName = models.CharField(max_length=30)
 
+    class Meta:
+        verbose_name_plural = 'Perfiles'
+
     def __unicode__(self):
         return unicode(self.email)
 
@@ -43,6 +46,9 @@ class File(models.Model):
     description = models.TextField(default="")
     profile = models.ForeignKey(Profile)
     ext = models.CharField(max_length=7)
+
+    class Meta:
+        verbose_name_plural = 'Archivos'
 
     def __unicode__(self):
         return u"ARCHIVO \n Location: %s \n Description: %s " % (self.fileUpload.path, self.description)
@@ -206,3 +212,7 @@ class Abundace_Estimation(models.Model):
 
     def __unicode__(self):
         print name
+
+    class Meta:
+        verbose_name_plural = "Procesos de  estimar abundancia"  
+
